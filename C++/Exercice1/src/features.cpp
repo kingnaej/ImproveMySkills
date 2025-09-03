@@ -10,16 +10,19 @@ void ajouterTache(std::string const &contenuTache, int const priorityTache,
 
 void afficherTaches(std::vector<std::unique_ptr<Tache>> const &listTaches)
 {
+    int numero = 1;
     for (auto const &tache : listTaches)
     {
-        std::cout << tache << "\n";
+        std::cout << numero << "-" << tache->getContenu() << ", Priority : " << tache->getPriority() << "\n";
+        numero++;
     }
 }
 
-void supprimerTache(std::string const &contenuTache, int const priorityTache,
-    std::vector<std::unique_ptr<Tache>> &listTaches)
+void supprimerTache(std::vector<std::unique_ptr<Tache>> &listTaches)
 {
-    listTaches.erase(std::remove_if(listTaches.begin(), listTaches.end(),
-        [contenuTache, priorityTache](const std::unique_ptr<Tache> & t)
-        {return t->getContenu() == contenuTache&& t->getPriority() == priorityTache;}), std::end(listTaches) );
+    listTaches.erase(std::ranges::remove_if(listTaches,
+        [](const std::unique_ptr<Tache> & t) { return  t->getPriority() > 5;}).begin(),
+        std::end(listTaches) );
+    std::cout << "\n=============TACHES RESTANTES===================\n" << std::endl;
+    afficherTaches(listTaches);
 }
